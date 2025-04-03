@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoute from "./routes/auth.routes.js";
+import taskRoute from "./routes/task.routes.js";
 const app = express();
 dotenv.config();
 app.use(
@@ -25,3 +26,4 @@ connectDB().then(() => {
 });
 
 app.use("/api/auth", authRoute);
+app.use("/api/task", taskRoute);

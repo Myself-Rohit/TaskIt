@@ -1,16 +1,28 @@
 import { useState } from "react";
 import useGetTasks from "../hooks/useGetTasks.js";
 import useCreateTask from "../hooks/useCreateTask.js";
+import useUpdateTask from "../hooks/useUpdateTask.js";
 
 function TodosPage() {
 	const { tasks } = useGetTasks();
 	const { createTask } = useCreateTask();
+	const { updateTask } = useUpdateTask();
 	const [newTask, setNewTask] = useState("");
+	const [taskId, setTaskId] = useState("");
+	const [isAddBtn, setIsAddBtn] = useState(true);
 	const handleAddTask = () => {
 		createTask(newTask.trim());
 		window.location.reload();
 	};
-
+	const handleEditTask = (taskId, task, completed) => {
+		updateTask(taskId, task.trim(), completed);
+		window.location.reload();
+	};
+	const getTaskToEdit = (taskId, task) => {
+		setNewTask(task);
+		setIsAddBtn(false);
+		setTaskId(taskId);
+	};
 	return (
 		<div className="min-h-screen  bg-gray-800 text-white flex flex-col items-center p-6">
 			<h1 className="text-3xl font-bold flex items-center gap-2">
@@ -35,10 +47,18 @@ function TodosPage() {
 						onChange={(e) => setNewTask(e.target.value)}
 					/>
 					<button
-						onClick={handleAddTask}
-						className="bg-green-600 p-3 rounded-lg hover:bg-green-500"
+						onClick={
+							isAddBtn
+								? handleAddTask
+								: () => handleEditTask(taskId, newTask, false)
+						}
+						className={`rounded-lg px-3 ${
+							isAddBtn
+								? " bg-green-600 hover:bg-green-500 "
+								: " bg-yellow-600 hover:bg-yellow-500 "
+						}`}
 					>
-						+
+						{isAddBtn ? "+" : "update"}
 					</button>
 				</div>
 				<div className="space-y-2  max-h-72 overflow-auto">
@@ -50,6 +70,9 @@ function TodosPage() {
 							>
 								<div className="flex items-center gap-2">
 									<div
+										onClick={() =>
+											handleEditTask(task._id, task.task, !task?.completed)
+										}
 										className={`w-4 h-4 rounded-full cursor-pointer ${
 											task.completed ? "bg-green-500" : "border border-gray-500"
 										}`}
@@ -63,7 +86,10 @@ function TodosPage() {
 									</span>
 								</div>
 								<div className="flex gap-2">
-									<span className="cursor-pointer hover:text-yellow-400">
+									<span
+										className="cursor-pointer hover:text-yellow-400"
+										onClick={() => getTaskToEdit(task?._id, task?.task)}
+									>
 										Edit
 									</span>
 									<span className="cursor-pointer hover:text-red-500">Del</span>

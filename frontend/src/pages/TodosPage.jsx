@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useGetTasks from "../hooks/useGetTasks.js";
 import useCreateTask from "../hooks/useCreateTask.js";
 import useUpdateTask from "../hooks/useUpdateTask.js";
@@ -12,14 +12,20 @@ function TodosPage() {
 	const [newTask, setNewTask] = useState("");
 	const [taskId, setTaskId] = useState("");
 	const [isAddBtn, setIsAddBtn] = useState(true);
+	const [completedTasks, setCompletedTasks] = useState(0);
+
+	useEffect(() => {
+		if (tasks) {
+			const filterTask = tasks?.filter((task) => task?.completed);
+			setCompletedTasks(filterTask.length);
+		}
+	}, [tasks]);
 
 	const handleAddTask = () => {
 		createTask(newTask.trim());
-		window.location.reload();
 	};
 	const handleEditTask = (taskId, task, completed) => {
 		updateTask(taskId, task.trim(), completed);
-		window.location.reload();
 	};
 	const getTaskToEdit = (taskId, task) => {
 		setNewTask(task);
@@ -29,8 +35,8 @@ function TodosPage() {
 
 	const handleDeleteTask = (taskId) => {
 		deleteTask(taskId);
-		window.location.reload();
 	};
+
 	return (
 		<div className="min-h-screen  bg-gray-800 text-white flex flex-col items-center p-6">
 			<h1 className="text-3xl font-bold flex items-center gap-2">
@@ -43,7 +49,7 @@ function TodosPage() {
 						<p className="text-sm text-gray-400">Keep it up</p>
 					</div>
 					<div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center text-lg font-bold">
-						{1}/{5}
+						{completedTasks}/{tasks?.length}
 					</div>
 				</div>
 				<div className="flex gap-2 mb-4">
@@ -62,19 +68,23 @@ function TodosPage() {
 						}
 						className={`rounded-lg px-3 ${
 							isAddBtn
-								? " bg-green-600 hover:bg-green-500 "
+								? " bg-green-600 hover:bg-green-500 font-semibold"
 								: " bg-yellow-600 hover:bg-yellow-500 "
 						}`}
 					>
 						{isAddBtn ? "+" : "update"}
 					</button>
 				</div>
-				<div className="space-y-2  max-h-72 overflow-auto">
+				<div
+					className="space-y-2 max-h-72 overflow-auto [&::-webkit-scrollbar]:[width:2px]
+            [&::-webkit-scrollbar-thumb]:bg-gray-500
+            "
+				>
 					{tasks &&
 						tasks.map((task) => (
 							<div
 								key={task?._id}
-								className="flex justify-between items-center p-3 border border-gray-700 rounded-lg"
+								className="flex justify-between items-center p-3 border border-gray-700 rounded-lg "
 							>
 								<div className="flex items-center gap-2">
 									<div
@@ -93,18 +103,26 @@ function TodosPage() {
 										{task?.task}
 									</span>
 								</div>
-								<div className="flex gap-2">
+								<div className="flex gap-3">
 									<span
 										className="cursor-pointer hover:text-yellow-400"
 										onClick={() => getTaskToEdit(task?._id, task?.task)}
 									>
-										Edit
+										<img
+											className="w-6 duration-200 hover:scale-110"
+											src="https://cdn-icons-png.flaticon.com/128/10573/10573603.png"
+											alt="Edit"
+										/>
 									</span>
 									<span
 										onClick={() => handleDeleteTask(task._id)}
 										className="cursor-pointer hover:text-red-500"
 									>
-										Del
+										<img
+											className="w-6 duration-200 hover:scale-110"
+											src="https://cdn-icons-png.flaticon.com/128/16118/16118818.png"
+											alt="delete"
+										/>
 									</span>
 								</div>
 							</div>

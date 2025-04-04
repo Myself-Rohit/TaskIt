@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const useDeleteTask = () => {
 	const [loading, setLoading] = useState(false);
@@ -11,10 +12,12 @@ const useDeleteTask = () => {
 				{ withCredentials: true }
 			);
 			if (res.data) {
-				console.log("data>>>", res.data);
+				window.location.reload();
 			}
 		} catch (error) {
-			console.log("err>>", error);
+			toast.error(
+				error?.response?.data || error?.message || "Something went wrong"
+			);
 		} finally {
 			setLoading(false);
 		}

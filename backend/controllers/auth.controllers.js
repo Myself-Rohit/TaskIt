@@ -65,7 +65,6 @@ export const signout = async (req, res) => {
 		res.cookie("token", null, { expiresIn: Date.now() });
 		res.status(200).send("Logout successfully!");
 	} catch (error) {
-		console.log("error:", error);
 		res.status(400).send("ERROR : " + error);
 	}
 };

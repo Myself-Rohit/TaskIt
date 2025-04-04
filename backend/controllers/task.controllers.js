@@ -35,7 +35,7 @@ export const getTasks = async (req, res) => {
 		}
 		res.status(200).json({ message: "Task Created", data: allTasks });
 	} catch (error) {
-		res.status(400).send(error.message);
+		res.status(400).send(error);
 	}
 };
 
@@ -47,7 +47,14 @@ export const editTask = async (req, res) => {
 		if (!user) {
 			throw new Error("User not found!");
 		}
+		const validValue = [true, false];
 		const { task, completed } = req.body;
+		if (!task) {
+			throw new Error("Can't update with empty task");
+		}
+		if (!validValue.includes(completed)) {
+			throw new Error("Something went wrong");
+		}
 		const updatedTask = await Task.findByIdAndUpdate(taskId, {
 			task,
 			completed,

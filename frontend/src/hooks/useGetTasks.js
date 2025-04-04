@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const useGetTasks = () => {
 	const [loading, setLoading] = useState(false);
@@ -11,10 +12,10 @@ const useGetTasks = () => {
 				withCredentials: true,
 			});
 			if (res.data) {
-				console.log("d>>", res.data);
 				setTasks(res.data.data);
 			}
 		} catch (error) {
+			toast.error(error?.response?.data || error.message);
 		} finally {
 			setLoading(false);
 		}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { useAuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
 const Auth = () => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -23,7 +24,9 @@ const Auth = () => {
 				navigate("/");
 			}
 		} catch (error) {
-			console.log("eerr>>", error.message);
+			toast.error(
+				error?.response?.data || error?.message || "failed to Signin"
+			);
 		}
 	};
 

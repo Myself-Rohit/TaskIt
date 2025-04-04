@@ -10,7 +10,8 @@ const app = express();
 dotenv.config();
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+		origin: "https://taskit-1hvl.onrender.com",
+		methods: ["GET", "POST", "PATCH", "DELETE"],
 		credentials: true,
 	})
 );
@@ -27,10 +28,10 @@ connectDB().then(() => {
 	});
 });
 
+app.use("/api/auth", authRoute);
+app.use("/api/task", taskRoute);
+
 app.use(express.static(path.join(__dirname, "/frontend/dist")));
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
-
-app.use("/api/auth", authRoute);
-app.use("/api/task", taskRoute);

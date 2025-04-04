@@ -8,9 +8,12 @@ const useGetTasks = () => {
 	const getTasks = async () => {
 		try {
 			setLoading(true);
-			const res = await axios.get("http://localhost:4000/api/task/all", {
-				withCredentials: true,
-			});
+			const res = await axios.get(
+				"https://taskit-1hvl.onrender.com/api/task/all",
+				{
+					withCredentials: true,
+				}
+			);
 			if (res.data) {
 				setTasks(res.data.data);
 			}

@@ -8,7 +8,7 @@ const useDeleteTask = () => {
 		try {
 			setLoading(true);
 			const res = await axios.delete(
-				`http://localhost:4000/api/task/remove/${taskId}`,
+				`https://taskit-1hvl.onrender.com/api/task/remove/${taskId}`,
 				{ withCredentials: true }
 			);
 			if (res.data) {

@@ -8,7 +8,7 @@ const useUpdateTask = () => {
 		try {
 			setLoading(true);
 			const res = await axios.patch(
-				`http://localhost:4000/api/task/edit/${taskId}`,
+				`https://taskit-1hvl.onrender.com/api/task/edit/${taskId}`,
 				{ task, completed },
 				{ withCredentials: true }
 			);

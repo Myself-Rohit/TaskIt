@@ -13,7 +13,9 @@ const Auth = () => {
 		e.preventDefault();
 		try {
 			const res = await axios.post(
-				`http://localhost:4000/api/auth/${isSignIn ? "signin" : "signup"}`,
+				`https://taskit-1hvl.onrender.com/api/auth/${
+					isSignIn ? "signin" : "signup"
+				}`,
 				{ username, password },
 				{ withCredentials: true }
 			);

@@ -2,14 +2,17 @@ import { useState } from "react";
 import useGetTasks from "../hooks/useGetTasks.js";
 import useCreateTask from "../hooks/useCreateTask.js";
 import useUpdateTask from "../hooks/useUpdateTask.js";
+import useDeleteTask from "../hooks/useDeleteTask.js";
 
 function TodosPage() {
 	const { tasks } = useGetTasks();
 	const { createTask } = useCreateTask();
 	const { updateTask } = useUpdateTask();
+	const { deleteTask } = useDeleteTask();
 	const [newTask, setNewTask] = useState("");
 	const [taskId, setTaskId] = useState("");
 	const [isAddBtn, setIsAddBtn] = useState(true);
+
 	const handleAddTask = () => {
 		createTask(newTask.trim());
 		window.location.reload();
@@ -22,6 +25,11 @@ function TodosPage() {
 		setNewTask(task);
 		setIsAddBtn(false);
 		setTaskId(taskId);
+	};
+
+	const handleDeleteTask = (taskId) => {
+		deleteTask(taskId);
+		window.location.reload();
 	};
 	return (
 		<div className="min-h-screen  bg-gray-800 text-white flex flex-col items-center p-6">
@@ -92,7 +100,12 @@ function TodosPage() {
 									>
 										Edit
 									</span>
-									<span className="cursor-pointer hover:text-red-500">Del</span>
+									<span
+										onClick={() => handleDeleteTask(task._id)}
+										className="cursor-pointer hover:text-red-500"
+									>
+										Del
+									</span>
 								</div>
 							</div>
 						))}

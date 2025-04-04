@@ -42,13 +42,16 @@ export const getTasks = async (req, res) => {
 export const editTask = async (req, res) => {
 	try {
 		const userId = req.user._id;
-		const { taskId } = req.params;
+		const { taskId, completed } = req.params;
 		const user = await User.findById(userId);
 		if (!user) {
 			throw new Error("User not found!");
 		}
 		const { task } = req.body;
-		const updatedTask = await Task.findByIdAndUpdate(taskId, { task });
+		const updatedTask = await Task.findByIdAndUpdate(taskId, {
+			task,
+			completed,
+		});
 		await updatedTask.save();
 		if (!updatedTask) {
 			throw new Error("Something went Wrong. Please try again");

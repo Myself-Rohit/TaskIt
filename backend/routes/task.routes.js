@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.post("/create", verifyToken, createTask);
 router.get("/all", verifyToken, getTasks);
-router.patch("/edit/:taskId", verifyToken, editTask);
+router.patch("/edit/:taskId/:completed", verifyToken, editTask);
 router.delete("/remove/:taskId", verifyToken, removeTask);
 export default router;

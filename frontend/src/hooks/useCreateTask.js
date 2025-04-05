@@ -7,7 +7,7 @@ const useCreateTask = () => {
 	const createTask = async (task) => {
 		try {
 			setLoading(true);
-			await axios.post(
+			const res = await axios.post(
 				`https://taskit-1hvl.onrender.com/api/task/create`,
 				{ task },
 				{ withCredentials: true }

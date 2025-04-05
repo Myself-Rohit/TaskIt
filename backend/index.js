@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import authRoute from "./routes/auth.routes.js";
 import taskRoute from "./routes/task.routes.js";
 import path from "path";
+
 const app = express();
 dotenv.config();
 app.use(
@@ -32,6 +33,6 @@ app.use("/api/auth", authRoute);
 app.use("/api/task", taskRoute);
 
 app.use(express.static(path.join(__dirname, "/frontend/dist")));
-app.get("*", (req, res) => {
+app.get(/^\/(?!api).*/, (req, res) => {
 	res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });

@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useTaskContext } from "../context/TaskContext";
 
 const useGetTasks = () => {
 	const [loading, setLoading] = useState(false);
-	const [tasks, setTasks] = useState([]);
+	const { tasks, setTasks } = useTaskContext();
 	const getTasks = async () => {
 		try {
 			setLoading(true);
@@ -15,6 +16,7 @@ const useGetTasks = () => {
 				}
 			);
 			if (res.data) {
+				console.log(res.data);
 				setTasks(res.data.data);
 			}
 		} catch (error) {

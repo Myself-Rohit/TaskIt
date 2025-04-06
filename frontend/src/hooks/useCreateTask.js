@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useTaskContext } from "../context/TaskContext";
 
 const useCreateTask = () => {
 	const [loading, setLoading] = useState(false);
+	const { tasks, setTasks } = useTaskContext();
 	const createTask = async (task) => {
 		try {
 			setLoading(true);
@@ -13,7 +15,9 @@ const useCreateTask = () => {
 				{ withCredentials: true }
 			);
 			if (res.data) {
-				window.location.reload();
+				console.log("create", res.data);
+				setTasks([...tasks, res.data.data]);
+				toast.success("Task Created");
 			}
 		} catch (error) {
 			toast.error(

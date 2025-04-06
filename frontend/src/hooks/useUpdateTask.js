@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useTaskContext } from "../context/TaskContext";
 
 const useUpdateTask = () => {
 	const [loading, setLoading] = useState(false);
+	const { tasks, setTasks } = useTaskContext();
 	const updateTask = async (taskId, task, completed) => {
 		try {
 			setLoading(true);
@@ -13,7 +15,14 @@ const useUpdateTask = () => {
 				{ withCredentials: true }
 			);
 			if (res.data) {
-				window.location.reload();
+				const updatedTasks = tasks.map((task) => {
+					if (task._id == res.data?.data._id) {
+						return res.data.data;
+					}
+					return task;
+				});
+				setTasks(updatedTasks);
+				toast.success("Task updated");
 			}
 		} catch (error) {
 			toast.error(

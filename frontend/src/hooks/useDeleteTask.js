@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useTaskContext } from "../context/TaskContext";
 
 const useDeleteTask = () => {
 	const [loading, setLoading] = useState(false);
+	const { tasks, setTasks } = useTaskContext();
 	const deleteTask = async (taskId) => {
 		try {
 			setLoading(true);
@@ -12,7 +14,11 @@ const useDeleteTask = () => {
 				{ withCredentials: true }
 			);
 			if (res.data) {
-				window.location.reload();
+				const filterTask = tasks.filter(
+					(task) => task._id !== res.data?.data._id
+				);
+				setTasks(filterTask);
+				toast.success("Task Deleted");
 			}
 		} catch (error) {
 			toast.error(

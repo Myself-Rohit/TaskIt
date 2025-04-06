@@ -3,6 +3,7 @@ import useGetTasks from "../hooks/useGetTasks.js";
 import useCreateTask from "../hooks/useCreateTask.js";
 import useUpdateTask from "../hooks/useUpdateTask.js";
 import useDeleteTask from "../hooks/useDeleteTask.js";
+import useLogout from "../hooks/useLogout.js";
 
 function TodosPage() {
 	const { tasks } = useGetTasks();
@@ -13,6 +14,7 @@ function TodosPage() {
 	const [taskId, setTaskId] = useState("");
 	const [isAddBtn, setIsAddBtn] = useState(true);
 	const [completedTasks, setCompletedTasks] = useState(0);
+	const { logout } = useLogout();
 
 	useEffect(() => {
 		if (tasks) {
@@ -21,11 +23,17 @@ function TodosPage() {
 		}
 	}, [tasks]);
 
-	const handleAddTask = () => {
+	const handleAddTask = (e) => {
+		e.preventDefault();
 		createTask(newTask.trim());
+		setNewTask("");
 	};
-	const handleEditTask = (taskId, task, completed) => {
+	const handleEditTask = (e, taskId, task, completed) => {
+		e.preventDefault();
 		updateTask(taskId, task.trim(), completed);
+		setNewTask("");
+		setTaskId("");
+		setIsAddBtn(true);
 	};
 	const getTaskToEdit = (taskId, task) => {
 		setNewTask(task);
@@ -37,11 +45,23 @@ function TodosPage() {
 		deleteTask(taskId);
 	};
 
+	const handleLogout = async () => {
+		logout();
+	};
+
 	return (
-		<div className="min-h-screen  bg-gray-800 text-white flex flex-col items-center p-6">
-			<h1 className="text-3xl font-bold flex items-center gap-2">
-				<span className="border border-white p-1">✔</span> TODO
-			</h1>
+		<div className="min-h-screen bg-gray-800 text-white flex flex-col items-center p-6">
+			<div className="flex items-center justify-center space-x-44">
+				<h1 className="text-3xl font-bold flex items-center gap-2">
+					<span className="border border-white p-1">✔</span> TODO
+				</h1>
+				<button
+					className="rounded-lg px-3 py-2 bg-green-500"
+					onClick={handleLogout}
+				>
+					Logout
+				</button>
+			</div>
 			<div className="bg-gray-800 p-6 mt-6 rounded-lg w-full max-w-md">
 				<div className="flex justify-between items-center mb-4 border border-white p-6 rounded-lg">
 					<div>
@@ -52,7 +72,14 @@ function TodosPage() {
 						{completedTasks}/{tasks?.length}
 					</div>
 				</div>
-				<div className="flex gap-2 mb-4">
+				<form
+					onSubmit={
+						isAddBtn
+							? handleAddTask
+							: (e) => handleEditTask(e, taskId, newTask, false)
+					}
+					className="flex gap-2 mb-4"
+				>
 					<input
 						type="text"
 						placeholder="Write your next task"
@@ -61,11 +88,6 @@ function TodosPage() {
 						onChange={(e) => setNewTask(e.target.value)}
 					/>
 					<button
-						onClick={
-							isAddBtn
-								? handleAddTask
-								: () => handleEditTask(taskId, newTask, false)
-						}
 						className={`rounded-lg px-3 ${
 							isAddBtn
 								? " bg-green-600 hover:bg-green-500 font-semibold"
@@ -74,7 +96,7 @@ function TodosPage() {
 					>
 						{isAddBtn ? "+" : "update"}
 					</button>
-				</div>
+				</form>
 				<div
 					className="space-y-2 max-h-72 overflow-auto [&::-webkit-scrollbar]:[width:2px]
             [&::-webkit-scrollbar-thumb]:bg-gray-500
@@ -88,8 +110,8 @@ function TodosPage() {
 							>
 								<div className="flex items-center gap-2">
 									<div
-										onClick={() =>
-											handleEditTask(task._id, task.task, !task?.completed)
+										onClick={(e) =>
+											handleEditTask(e, task._id, task.task, !task?.completed)
 										}
 										className={`w-4 h-4 rounded-full cursor-pointer ${
 											task.completed ? "bg-green-500" : "border border-gray-500"

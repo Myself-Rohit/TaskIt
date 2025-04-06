@@ -55,10 +55,14 @@ export const editTask = async (req, res) => {
 		if (!validValue.includes(completed)) {
 			throw new Error("Something went wrong");
 		}
-		const updatedTask = await Task.findByIdAndUpdate(taskId, {
-			task,
-			completed,
-		});
+		const updatedTask = await Task.findByIdAndUpdate(
+			taskId,
+			{
+				task,
+				completed,
+			},
+			{ new: true }
+		);
 		await updatedTask.save();
 		if (!updatedTask) {
 			throw new Error("Something went Wrong. Please try again");
@@ -82,7 +86,7 @@ export const removeTask = async (req, res) => {
 		if (!removeTask) {
 			throw new Error("Something went Wrong. Please try again");
 		} else {
-			res.status(200).json({ message: "Task Deleted" });
+			res.status(200).json({ message: "Task Deleted", data: removeTask });
 		}
 	} catch (error) {
 		res.status(400).send(error.message);
